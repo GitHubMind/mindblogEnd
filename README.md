@@ -26,4 +26,7 @@
  go mod tidy
  //因为为了封装  jwt.NewNumericDate 出的幺蛾子，并且又想放到 swagger,已测试到parseDepth的最小层
  swag init --parseDependency --parseInternal --parseDepth 5  -g main.go  &&  go run main.go
-```
+``` 
+![image](https://user-images.githubusercontent.com/27894531/192190385-a1a7062d-e987-472b-8a44-6f117c7e8f41.png)
+
+就可以run 起来了
