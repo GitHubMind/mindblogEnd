@@ -1,0 +1,9 @@
+2022-09-22 01:32:25	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'resp' at row 1}
+2022-09-22 01:32:28	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'resp' at row 1}
+2022-09-22 01:32:33	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'resp' at row 1}
+2022-09-22 01:32:37	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'body' at row 1}
+2022-09-22 01:32:46	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'body' at row 1}
+2022-09-22 01:32:46	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'body' at row 1}
+2022-09-22 01:32:50	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'resp' at row 1}
+2022-09-22 01:32:54	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'body' at row 1}
+2022-09-22 01:32:54	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'body' at row 1}

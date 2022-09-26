@@ -1,0 +1,9 @@
+2022-09-20 11:11:53	INFO	blog/main.go:39	register table success
+2022-09-20 11:17:38	INFO	blog/main.go:39	register table success
+2022-09-20 11:18:29	INFO	blog/main.go:39	register table success
+2022-09-20 11:20:20	INFO	blog/main.go:39	register table success
+2022-09-20 11:21:50	INFO	blog/main.go:39	register table success
+2022-09-20 11:23:08	ERROR	blog/main.go:39	register table failed{error 26 0  invalid field found for struct blog/model/blog.Article's field ArticleContentBackUp: define a valid foreign key for relations or implement the Valuer/Scanner interface}
+2022-09-20 11:24:33	INFO	blog/main.go:39	register table success
+2022-09-20 11:30:33	INFO	blog/main.go:39	register table success
+2022-09-20 11:33:45	INFO	blog/main.go:39	register table success

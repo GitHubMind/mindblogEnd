@@ -1,0 +1,6 @@
+2022-09-21 22:01:59	INFO	blog/main.go:39	register table success
+2022-09-21 22:30:51	INFO	blog/main.go:39	register table success
+2022-09-21 22:31:23	ERROR	middleware/operation.go:58	从Gin的Context中获取从jwt解析信息失败, 请检查请求头是否存在x-token且claims是否为规定结构
+2022-09-21 22:31:41	ERROR	middleware/operation.go:58	从Gin的Context中获取从jwt解析信息失败, 请检查请求头是否存在x-token且claims是否为规定结构
+2022-09-21 22:32:12	INFO	blog/main.go:39	register table success
+2022-09-21 22:32:45	INFO	blog/main.go:39	register table success

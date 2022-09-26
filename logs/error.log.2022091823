@@ -1,0 +1,1 @@
+2022-09-18 23:47:25	ERROR	gin@v1.7.7/context.go:168	Error 1292: Incorrect datetime value: '0000-00-00' for column 'created_at' at row 1

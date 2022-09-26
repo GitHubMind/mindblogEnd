@@ -1,0 +1,2 @@
+2022-09-21 16:50:24	ERROR	gin@v1.7.7/context.go:168	Error 1406: Data too long for column 'desc' at row 1
+2022-09-21 16:50:36	ERROR	gin@v1.7.7/context.go:168	Error 1406: Data too long for column 'desc' at row 1

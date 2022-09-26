@@ -1,0 +1,2 @@
+2022-09-20 13:55:36	INFO	blog/main.go:39	register table success
+2022-09-20 13:58:00	ERROR	gin@v1.7.7/context.go:168	Error 1146: Table 'test.article_contents' doesn't exist

@@ -1,0 +1,2 @@
+2022-09-21 14:42:38	ERROR	gin@v1.7.7/context.go:168	添加失败!{error 26 0  存在重复name，请修改name}
+2022-09-21 14:58:43	INFO	blog/main.go:39	register table success

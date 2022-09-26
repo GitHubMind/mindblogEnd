@@ -1,0 +1,67 @@
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80
+cors:
+  mode: ""
+  whitelist: []
+gin:
+  prot: 9999
+  run-mode: debug
+  is-open-swager: true
+jwt:
+  signing-key: e1dd2037-bde0-44f6-a73f-c1343321cb57
+  expires-time: 604800
+  buffer-time: 86400
+  issuer: mind
+local:
+  path: uploads/file
+  store-path: uploads/file
+mysql:
+  path: 127.0.0.1
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: test
+  username: root
+  password: mind123
+  name: ""
+  dsn: ""
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: error
+  log-zap: false
+mysqllist:
+  - path: ""
+    port: ""
+    config: ""
+    db-name: ""
+    username: ""
+    password: ""
+    name: system
+    dsn: root:mind123@tcp(127.0.0.1:3306)/blog?&parseTime=True&loc=Local
+    max-idle-conns: 10
+    max-open-conns: 100
+    log-mode: error
+    log-zap: false
+  - path: ""
+    port: ""
+    config: ""
+    db-name: ""
+    username: ""
+    password: ""
+    name: system2
+    dsn:
+    max-idle-conns: 10
+    max-open-conns: 100
+    log-mode: error
+    log-zap: false
+port: 9999
+system:
+  env: ""
+  addr: 0
+  db-type: mysql
+  oss-type: local
+  use-multipoint: false
+  use-redis: false
+  iplimit-count: 15000
+  iplimit-time: 3600
