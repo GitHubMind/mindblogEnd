@@ -9,9 +9,23 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"log"
+	"time"
 )
 
 type FileUploadAndDownloadApi struct{}
+
+//用于记录 time.After的
+type MarkUploadType struct {
+	Ticker    *time.Ticker
+	Id        uint
+	CloseChan chan bool
+}
+
+var MarkUpload map[string]MarkUploadType
+
+func init() {
+	MarkUpload = make(map[string]MarkUploadType)
+}
 
 // @Tags FileUploadAndDownload
 // @Summary 上传文件
@@ -26,7 +40,6 @@ func (receiver *FileUploadAndDownloadApi) UploadFile(c *gin.Context) {
 	//预留标志，用于存储不同方式的
 	tag := c.DefaultQuery("tag", "0")
 	//core的原因 应该去排查一下
-	log.Println(123)
 	_, header, err := c.Request.FormFile("file")
 	//header.Content 里面的东西了
 	if err != nil {
@@ -40,6 +53,61 @@ func (receiver *FileUploadAndDownloadApi) UploadFile(c *gin.Context) {
 		response.FailWithMessage("修改数据库链接失败", c)
 		return
 	}
+	response.OkWithDetailed(sysRes.FileResponse{File: file}, "上传成功", c)
+}
+
+// @Tags FileUploadAndDownload
+// @Summary 上传文件但会一定时间删除
+// @Security ApiKeyAuth
+// @accept multipart/form-data
+// @Produce  application/json
+// @Param file formData file true "上传文件示例"
+// @Success 200 {object} response.Response{data=response.FileResponse,msg=string} "上传文件示例,返回包括文件详情"
+// @Router /fileUploadAndDownload/UploadWillDelete [post]
+func (receiver *FileUploadAndDownloadApi) UploadWillDelete(c *gin.Context) {
+	//var file system.FileUploadAndDownload
+	//预留标志，用于存储不同方式的
+	tag := c.DefaultQuery("tag", "0")
+	//core的原因 应该去排查一下
+	_, header, err := c.Request.FormFile("file")
+	//header.Content 里面的东西了
+	if err != nil {
+		global.GM_LOG.Error("接收文件失败!", zap.Error(err))
+		response.FailWithMessage("接收文件失败", c)
+		return
+	}
+	file, err := fileUploadAndDownloadService.UploadFile(header, tag) // 文件上传后拿到文件路径
+	if err != nil {
+		global.GM_LOG.Error("修改数据库链接失败!", zap.Error(err))
+		response.FailWithMessage("修改数据库链接失败", c)
+		return
+	}
+	//添加进入
+	go func() {
+		//不用锁 因为每一个url都会不一样
+		MarkUpload[file.Url] = MarkUploadType{Ticker: time.NewTicker(2 * 60 * time.Second), Id: file.ID, CloseChan: make(chan bool)}
+		//MarkUpload[file.Url].Ticker.Stop()
+		for {
+			select {
+			case <-MarkUpload[file.Url].Ticker.C:
+				var del system.FileUploadAndDownload
+				del.ID = MarkUpload[file.Url].Id
+				err := fileUploadAndDownloadService.DeleteFile(&del)
+				if err != nil {
+					global.GM_LOG.Error("删除照片!", zap.Error(err))
+				}
+
+				MarkUpload[file.Url].Ticker.Stop()
+			case stop := <-MarkUpload[file.Url].CloseChan:
+				if stop {
+					return
+				}
+			}
+
+		}
+
+	}()
+
 	response.OkWithDetailed(sysRes.FileResponse{File: file}, "上传成功", c)
 }
 

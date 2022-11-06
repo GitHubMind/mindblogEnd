@@ -1,4 +1,0 @@
-2022-09-19 16:53:44	INFO	blog/main.go:39	register table success
-2022-09-19 16:55:09	INFO	blog/main.go:39	register table success
-2022-09-19 16:57:49	ERROR	gin@v1.7.7/context.go:168	WHERE conditions required
-2022-09-19 16:58:09	ERROR	gin@v1.7.7/context.go:168	WHERE conditions required

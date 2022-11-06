@@ -67,7 +67,7 @@ func GormMysqlByConfig(m *config.GeneralDB) (*gorm.DB, error) {
 	}
 	var gc lib.GormConfig
 	if db, err := gorm.Open(mysql.New(mysqlConfig), gc.Config(m)); err != nil {
-		log.Print("mysql:")
+		log.Print("mysql:", err)
 		return nil, err
 	} else {
 		sqlDB, _ := db.DB()

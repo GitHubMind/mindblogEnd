@@ -57,6 +57,7 @@ func JWTAuth() gin.HandlerFunc {
 			newClaims, _ := j.ParseToken(newToken)
 			c.Header("new-token", newToken)
 			c.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt.Unix(), 10))
+			//是否单点登录
 			if global.GM_CONFIG.System.UseMultipoint {
 				//redis
 				//RedisJwtToken, err := jwtService.GetRedisJWT(newClaims.Username)

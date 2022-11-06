@@ -18,7 +18,7 @@ type LimitConfig struct {
 	CheckOrMark func(key string, expire int, limit int) error
 	// Expire key 过期时间
 	Expire int
-	// Limit 周期时间
+	// Limit 周期时间∆
 	Limit int
 }
 

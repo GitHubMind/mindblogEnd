@@ -42,6 +42,7 @@ func main() {
 	}
 	//如果是多服务器
 	//初始化
+	initapp.RedisInit()
 	if err := router.InitRouter().Run(
 		fmt.Sprintf(":%d", global.GM_CONFIG.GinConfig.Port)); err != nil {
 		panic(err)

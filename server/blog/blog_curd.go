@@ -6,7 +6,11 @@ import (
 	"blog/model/blog/request"
 	"blog/model/blog/response"
 	"blog/model/system"
+	"context"
+	"errors"
 	"gorm.io/gorm"
+	"log"
+	"time"
 )
 
 type BlogService struct {
@@ -52,7 +56,7 @@ func (receiver BlogService) FindArticle(art *request.ArticleRequsetID) (value bl
 		//db := global.GM_DB.Create(&art)
 		//id = art.ID
 		//return db.Error
-		err = tx.Model(blog.Article{}).Preload("Category").Preload("Tag").Joins("ArticleContentBackUp").First(&articles).Error
+		err = tx.Model(blog.Article{}).Preload("Category").Preload("LikeAndWatchs").Preload("Tag").Joins("ArticleContentBackUp").First(&articles).Error
 		value = articles
 		return err
 	})
@@ -159,7 +163,7 @@ func (receiver BlogService) GetSearchArticleList(art *request.ArticleSearchRequs
 	if err != nil {
 		return
 	}
-	err = db.Limit(limit).Offset(offset).Preload("Category").Preload("Tag").Find(&articles).Error
+	err = db.Limit(limit).Offset(offset).Preload("LikeAndWatchs").Preload("Category").Preload("Tag").Find(&articles).Error
 	if err != nil {
 		return
 	}
@@ -221,6 +225,8 @@ func (receiver BlogService) GetBlogInfoByName(nikeName *request.BlogNikeNameRequ
 	info.GitHubAddress = user.GitHubAddress
 	info.HeaderImg = user.HeaderImg
 	info.Uid = user.ID
+	info.BlogWant = user.BlogWant
+
 	return
 }
 
@@ -243,6 +249,7 @@ func (receiver BlogService) GetBlogInfoById(art *blog.Article) (info response.Bl
 	info.HeaderImg = user.HeaderImg
 	info.Uid = user.ID
 	info.NickName = user.NickName
+	info.BlogWant = user.BlogWant
 	return
 }
 
@@ -250,6 +257,100 @@ func (receiver BlogService) GetBlogCategoryTaglistById(id uint) (info response.B
 	//global.GM_DB.Model(blog.Article{}).Where(" uid = ? ", id).Find(&info.ArticleCount)
 	global.GM_DB.Model(blog.Tag{}).Where(" uid = ? ", id).Find(&info.Tag)
 	global.GM_DB.Model(blog.Category{}).Where(" uid = ? ", id).Find(&info.Category)
+	return
+}
+func (receiver BlogService) ClickBlogLike(value *blog.LikeAndWatch) (err error) {
+	//redis  articleid-ip-like
+	key := string(value.ArticleID) + value.Ip + "like"
+	//去重
+	val, err := global.GM_REDIS.Incr(context.Background(), key).Result()
+	if val > 1 {
+		err = errors.New("重复点赞")
+		return
+	}
+
+	value.Like = 1
+	global.GM_DB.Debug().Model(&value).Where("ip = ?", value.Ip).Where("article_id = ? ", value.ArticleID).Updates(&value)
+
+	//redis blog_article_like=1
+	return
+}
+func (receiver BlogService) CanclBlogLike(value *blog.LikeAndWatch) (err error) {
+	//redis  articleid-ip-like
+	key := string(value.ArticleID) + value.Ip + "like"
+	//去重
+	_, err = global.GM_REDIS.Del(context.Background(), key).Result()
+	if err != nil {
+		return
+	} else {
+		go func() {
+			value.Like = 2
+			global.GM_DB.Debug().Model(&value).Where("ip = ?", value.Ip).Where("article_id = ? ", value.ArticleID).Updates(&value)
+		}()
+	}
+	return
+}
+func (receiver BlogService) ClickBlog(value *blog.LikeAndWatch) (err error) {
+	//redis  articleid-ip-like
+	var total int64
+	err = global.GM_DB.Model(&value).Where("ip = ?", value.Ip).Where("article_id = ? ", value.ArticleID).Find(&value).Count(&total).Error
+	if err != nil {
+		return
+	}
+	if total == 0 {
+		global.GM_DB.Model(&value).Save(&value)
+	}
+	return
+}
+
+func (receiver BlogService) GetRateNumber(ID uint) (total int64, err error) {
+	//redis  articleid-ip-like
+	var value *blog.LikeAndWatch
+	timeSelect := time.Now().Format("2006-01-02")
+
+	t2, _ := time.ParseInLocation("2006-01-02", timeSelect, time.Local)
+	var art []blog.Article
+	// 因为这个字段他是unqiue的 不担心重复
+	//提取 id
+	err = global.GM_DB.Model(&art).Where("uid = ? ", ID).Find(&art).Error
+	var article_id_arr []uint
+	for _, artitem := range art {
+		article_id_arr = append(article_id_arr, artitem.ID)
+	}
+	err = global.GM_DB.Model(&value).Where("created_at BETWEEN ? AND ? ", t2, t2.AddDate(0, 0, 1)).Where("article_id in (?) ", article_id_arr).Find(&value).Count(&total).Error
+	if err != nil {
+		return
+	}
+	if total == 0 {
+		global.GM_DB.Model(&value).Save(&value)
+	}
+	return
+}
+func (receiver BlogService) GetRateLikeNumber(ID uint) (total float64, err error) {
+	//redis  articleid-ip-like
+	var value []blog.LikeAndWatch
+	var art []blog.Article
+	// 因为这个字段他是unqiue的 不担心重复
+	//提取 id
+	err = global.GM_DB.Model(&art).Where("uid = ? ", ID).Find(&art).Error
+	var article_id_arr []uint
+	for _, artitem := range art {
+		article_id_arr = append(article_id_arr, artitem.ID)
+	}
+	var totalInt int64
+	err = global.GM_DB.Model(blog.LikeAndWatch{}).Where("article_id in (?) ", article_id_arr).Find(&value).Count(&totalInt).Error
+	like := 0
+
+	if err != nil {
+		return
+	}
+	for _, watch := range value {
+		if watch.Like == 1 {
+			like++
+		}
+		log.Println(watch)
+	}
+	total = float64(like) / float64(totalInt)
 
 	return
 }

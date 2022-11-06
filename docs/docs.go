@@ -760,6 +760,84 @@ const docTemplate = `{
                 }
             }
         },
+        "/blog/CancelLike": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article"
+                ],
+                "summary": "取消点赞文章",
+                "responses": {
+                    "200": {
+                        "description": "tag列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/blog/ClickBlogz": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article"
+                ],
+                "summary": "游览量",
+                "responses": {
+                    "200": {
+                        "description": "tag列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/blog/CreateArticle": {
             "post": {
                 "security": [
@@ -1014,6 +1092,53 @@ const docTemplate = `{
                 }
             }
         },
+        "/blog/DeleteMulArticle": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "删除文章",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.ArticleRequsetIDMul"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建客户",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/blog/DeleteTag": {
             "delete": {
                 "security": [
@@ -1045,6 +1170,106 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "状态",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/blog/FindArticle": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article"
+                ],
+                "summary": "通过id获取文章",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.ArticleRequsetID"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建客户",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/blog/GetBlogInfoByName": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blog"
+                ],
+                "summary": "根据blog操作",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.BlogNikeNameRequset"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建客户",
                         "schema": {
                             "allOf": [
                                 {
@@ -1114,6 +1339,102 @@ const docTemplate = `{
                 }
             }
         },
+        "/blog/GetRateLikeNumber": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article"
+                ],
+                "summary": "好评率",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Insert your access token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "tag列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/blog/GetRateNumber": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article"
+                ],
+                "summary": "获取该该用户的今日访问数量",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Insert your access token",
+                        "name": "x-token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "tag列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/blog/GetSearchArticleList": {
             "get": {
                 "security": [
@@ -1130,7 +1451,7 @@ const docTemplate = `{
                 "tags": [
                     "Article"
                 ],
-                "summary": "获得文章列表",
+                "summary": "获得博客文章列表",
                 "parameters": [
                     {
                         "description": "用户信息",
@@ -1180,7 +1501,7 @@ const docTemplate = `{
                 "tags": [
                     "Article"
                 ],
-                "summary": "查询tag",
+                "summary": "点赞文章",
                 "responses": {
                     "200": {
                         "description": "tag列表",
@@ -1216,21 +1537,74 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "修改文章",
+                "tags": [
+                    "Article"
+                ],
+                "summary": "修改文章内容",
                 "parameters": [
                     {
-                        "description": "用户信息",
+                        "description": "文章内容",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.ArticleRequset"
+                            "$ref": "#/definitions/request.ArticleContent"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "创建客户",
+                        "description": "1",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/blog/UpdateArticleContentOnLine": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Article"
+                ],
+                "summary": "修改线上展示的内容",
+                "parameters": [
+                    {
+                        "description": "文章内容",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.ArticleContent"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "1",
                         "schema": {
                             "allOf": [
                                 {
@@ -1341,6 +1715,57 @@ const docTemplate = `{
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/response.PolicyPathResponse"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/fileUploadAndDownload/UploadWillDelete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "FileUploadAndDownload"
+                ],
+                "summary": "上传文件但会一定时间删除",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "上传文件示例",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "上传文件示例,返回包括文件详情",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.FileResponse"
                                         },
                                         "msg": {
                                             "type": "string"
@@ -3768,6 +4193,9 @@ const docTemplate = `{
         "blog.Article": {
             "type": "object",
             "properties": {
+                "articleContentBackUp": {
+                    "$ref": "#/definitions/blog.ArticleContentBackUp"
+                },
                 "category": {
                     "type": "array",
                     "items": {
@@ -3791,10 +4219,10 @@ const docTemplate = `{
                     "description": "主键ID",
                     "type": "integer"
                 },
-                "like_watched": {
+                "likeAndWatchs": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/blog.LikeAndWatck"
+                        "$ref": "#/definitions/blog.LikeAndWatch"
                     }
                 },
                 "state": {
@@ -3814,6 +4242,17 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "blog.ArticleContentBackUp": {
+            "type": "object",
+            "properties": {
+                "articleID": {
+                    "type": "integer"
+                },
+                "content": {
                     "type": "string"
                 }
             }
@@ -3838,15 +4277,22 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "u_id": {
+                    "description": "多用户",
+                    "type": "integer"
+                },
                 "updatedAt": {
                     "description": "更新时间",
                     "type": "string"
                 }
             }
         },
-        "blog.LikeAndWatck": {
+        "blog.LikeAndWatch": {
             "type": "object",
             "properties": {
+                "article_id": {
+                    "type": "integer"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
@@ -3858,15 +4304,13 @@ const docTemplate = `{
                 "ip": {
                     "type": "string"
                 },
-                "state": {
+                "like": {
+                    "description": "1 true 2 false",
                     "type": "integer"
                 },
                 "updatedAt": {
                     "description": "更新时间",
                     "type": "string"
-                },
-                "watched": {
-                    "type": "integer"
                 }
             }
         },
@@ -3889,6 +4333,10 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "u_id": {
+                    "description": "多用户",
+                    "type": "integer"
                 },
                 "updatedAt": {
                     "description": "更新时间",
@@ -3919,9 +4367,23 @@ const docTemplate = `{
                 }
             }
         },
+        "request.ArticleContent": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "request.ArticleRequset": {
             "type": "object",
             "properties": {
+                "articleContentBackUp": {
+                    "$ref": "#/definitions/blog.ArticleContentBackUp"
+                },
                 "category": {
                     "type": "array",
                     "items": {
@@ -3945,10 +4407,10 @@ const docTemplate = `{
                     "description": "主键ID",
                     "type": "integer"
                 },
-                "like_watched": {
+                "likeAndWatchs": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/blog.LikeAndWatck"
+                        "$ref": "#/definitions/blog.LikeAndWatch"
                     }
                 },
                 "state": {
@@ -3977,6 +4439,25 @@ const docTemplate = `{
             "properties": {
                 "id": {
                     "type": "integer"
+                }
+            }
+        },
+        "request.ArticleRequsetIDMul": {
+            "type": "object",
+            "properties": {
+                "IDS": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/request.ArticleRequsetID"
+                    }
+                }
+            }
+        },
+        "request.BlogNikeNameRequset": {
+            "type": "object",
+            "properties": {
+                "nick_name": {
+                    "type": "string"
                 }
             }
         },
@@ -4932,6 +5413,9 @@ const docTemplate = `{
                     "description": "基础颜色",
                     "type": "string"
                 },
+                "blog_want": {
+                    "type": "string"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
@@ -4943,6 +5427,10 @@ const docTemplate = `{
                 "enable": {
                     "description": "用户是否被冻结 1正常 2冻结",
                     "type": "integer"
+                },
+                "github_address": {
+                    "description": "用户邮箱",
+                    "type": "string"
                 },
                 "headerImg": {
                     "description": "用户头像",

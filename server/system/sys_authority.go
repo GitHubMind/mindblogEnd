@@ -48,7 +48,6 @@ func (authorityService *AuthorityServer) GetAuthorityInfoList(info request.PageI
 	return authority, total, err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: findChildrenAuthority
 //@description: 查询子角色
 //@param: authority *model.SysAuthority
@@ -64,7 +63,6 @@ func (authorityService *AuthorityServer) findChildrenAuthority(authority *system
 	return err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: SetMenuAuthority
 //@description: 菜单与角色绑定
 //@param: auth *system.SysAuthority

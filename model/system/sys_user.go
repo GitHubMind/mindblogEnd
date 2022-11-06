@@ -22,6 +22,7 @@ type SysUser struct {
 	Email         string         `json:"email"  gorm:"comment:用户邮箱"`                      // 用户邮箱
 	GitHubAddress string         `json:"github_address"  gorm:"comment:github地址"`         // 用户邮箱
 	Enable        int            `json:"enable" gorm:"default:1;comment:用户是否被冻结 1正常 2冻结"` //用户是否被冻结 1正常 2冻结
+	BlogWant      string         `json:"blog_want"comment:"blog签名"`
 }
 
 func (SysUser) TableName() string {

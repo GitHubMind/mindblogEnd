@@ -39,7 +39,7 @@ func OperationRecord() gin.HandlerFunc {
 			if err != nil {
 				global.GM_LOG.Error("read body from request error:", zap.Error(err))
 			} else {
-				//塞回去，感觉这个在哪里看到过
+				//塞回去，
 				c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 			}
 		} else {

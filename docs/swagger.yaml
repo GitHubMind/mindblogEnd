@@ -2,6 +2,8 @@ basePath: /
 definitions:
   blog.Article:
     properties:
+      articleContentBackUp:
+        $ref: '#/definitions/blog.ArticleContentBackUp'
       category:
         items:
           $ref: '#/definitions/blog.Category'
@@ -18,9 +20,9 @@ definitions:
       id:
         description: 主键ID
         type: integer
-      like_watched:
+      likeAndWatchs:
         items:
-          $ref: '#/definitions/blog.LikeAndWatck'
+          $ref: '#/definitions/blog.LikeAndWatch'
         type: array
       state:
         type: integer
@@ -34,6 +36,13 @@ definitions:
         type: integer
       updatedAt:
         description: 更新时间
+        type: string
+    type: object
+  blog.ArticleContentBackUp:
+    properties:
+      articleID:
+        type: integer
+      content:
         type: string
     type: object
   blog.Category:
@@ -50,12 +59,17 @@ definitions:
         type: integer
       name:
         type: string
+      u_id:
+        description: 多用户
+        type: integer
       updatedAt:
         description: 更新时间
         type: string
     type: object
-  blog.LikeAndWatck:
+  blog.LikeAndWatch:
     properties:
+      article_id:
+        type: integer
       createdAt:
         description: 创建时间
         type: string
@@ -64,13 +78,12 @@ definitions:
         type: integer
       ip:
         type: string
-      state:
+      like:
+        description: 1 true 2 false
         type: integer
       updatedAt:
         description: 更新时间
         type: string
-      watched:
-        type: integer
     type: object
   blog.Tag:
     properties:
@@ -86,6 +99,9 @@ definitions:
         type: integer
       name:
         type: string
+      u_id:
+        description: 多用户
+        type: integer
       updatedAt:
         description: 更新时间
         type: string
@@ -105,8 +121,17 @@ definitions:
           $ref: '#/definitions/system.SysBaseMenu'
         type: array
     type: object
+  request.ArticleContent:
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+    type: object
   request.ArticleRequset:
     properties:
+      articleContentBackUp:
+        $ref: '#/definitions/blog.ArticleContentBackUp'
       category:
         items:
           $ref: '#/definitions/blog.Category'
@@ -123,9 +148,9 @@ definitions:
       id:
         description: 主键ID
         type: integer
-      like_watched:
+      likeAndWatchs:
         items:
-          $ref: '#/definitions/blog.LikeAndWatck'
+          $ref: '#/definitions/blog.LikeAndWatch'
         type: array
       state:
         type: integer
@@ -145,6 +170,18 @@ definitions:
     properties:
       id:
         type: integer
+    type: object
+  request.ArticleRequsetIDMul:
+    properties:
+      IDS:
+        items:
+          $ref: '#/definitions/request.ArticleRequsetID'
+        type: array
+    type: object
+  request.BlogNikeNameRequset:
+    properties:
+      nick_name:
+        type: string
     type: object
   request.CasbinInReceive:
     properties:
@@ -814,6 +851,8 @@ definitions:
       baseColor:
         description: 基础颜色
         type: string
+      blog_want:
+        type: string
       createdAt:
         description: 创建时间
         type: string
@@ -823,6 +862,9 @@ definitions:
       enable:
         description: 用户是否被冻结 1正常 2冻结
         type: integer
+      github_address:
+        description: 用户邮箱
+        type: string
       headerImg:
         description: 用户头像
         type: string
@@ -1272,6 +1314,48 @@ paths:
       summary: 用户登陆
       tags:
       - SysUser
+  /blog/CancelLike:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: tag列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 取消点赞文章
+      tags:
+      - Article
+  /blog/ClickBlogz:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: tag列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 游览量
+      tags:
+      - Article
   /blog/CreateArticle:
     delete:
       consumes:
@@ -1415,6 +1499,32 @@ paths:
       summary: 删除category
       tags:
       - Article
+  /blog/DeleteMulArticle:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.ArticleRequsetIDMul'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建客户
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 删除文章
   /blog/DeleteTag:
     delete:
       consumes:
@@ -1443,6 +1553,62 @@ paths:
       summary: 删除tag
       tags:
       - Article
+  /blog/FindArticle:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.ArticleRequsetID'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建客户
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 通过id获取文章
+      tags:
+      - Article
+  /blog/GetBlogInfoByName:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.BlogNikeNameRequset'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建客户
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 根据blog操作
+      tags:
+      - blog
   /blog/GetCategory:
     get:
       consumes:
@@ -1471,6 +1637,60 @@ paths:
       summary: 创建category
       tags:
       - Article
+  /blog/GetRateLikeNumber:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: tag列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 好评率
+      tags:
+      - Article
+  /blog/GetRateNumber:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access token
+        in: header
+        name: x-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: tag列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取该该用户的今日访问数量
+      tags:
+      - Article
   /blog/GetSearchArticleList:
     get:
       consumes:
@@ -1496,7 +1716,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 获得文章列表
+      summary: 获得博客文章列表
       tags:
       - Article
   /blog/GetTaglist:
@@ -1517,7 +1737,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 查询tag
+      summary: 点赞文章
       tags:
       - Article
   /blog/UpdateArticle:
@@ -1525,17 +1745,17 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 用户信息
+      - description: 文章内容
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/request.ArticleRequset'
+          $ref: '#/definitions/request.ArticleContent'
       produces:
       - application/json
       responses:
         "200":
-          description: 创建客户
+          description: "1"
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -1545,7 +1765,37 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 修改文章
+      summary: 修改文章内容
+      tags:
+      - Article
+  /blog/UpdateArticleContentOnLine:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 文章内容
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.ArticleContent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: "1"
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 修改线上展示的内容
+      tags:
+      - Article
   /casbin/UpdateCasbin:
     post:
       consumes:
@@ -1604,6 +1854,35 @@ paths:
       summary: 获取权限列表
       tags:
       - Casbin
+  /fileUploadAndDownload/UploadWillDelete:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 上传文件示例
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 上传文件示例,返回包括文件详情
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.FileResponse'
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 上传文件但会一定时间删除
+      tags:
+      - FileUploadAndDownload
   /fileUploadAndDownload/deleteFile:
     post:
       parameters:

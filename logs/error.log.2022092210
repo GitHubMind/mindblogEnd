@@ -1,2 +1,0 @@
-2022-09-22 10:25:51	ERROR	gin@v1.7.7/context.go:168	create operation record error:{error 26 0  Error 1406: Data too long for column 'resp' at row 1}
-2022-09-22 10:47:46	ERROR	gin@v1.7.7/context.go:168	GetSearchArticleList查询失败Error 1054: Unknown column 'CreatedAt' in 'order clause'

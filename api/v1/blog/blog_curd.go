@@ -1,10 +1,12 @@
 package blog
 
 import (
+	sys "blog/api/v1/system"
 	"blog/global"
 	"blog/lib"
 	"blog/model/blog"
 	"blog/model/blog/request"
+	respBlog "blog/model/blog/response"
 	"blog/model/commond/response"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -36,6 +38,9 @@ func (g blogCurd) CreateArticle(c *gin.Context) {
 		response.FailWithMessage("添加失败,不能重复添加", c)
 		return
 	}
+	/// 阻止删除
+	sys.MarkUpload[r.CoverImageUrl].Ticker.Stop()
+	sys.MarkUpload[r.CoverImageUrl].CloseChan <- true
 	response.OkWithDetailed(map[string]uint{"id": id}, "添加成功", c)
 }
 
@@ -104,6 +109,8 @@ func (g blogCurd) UpdateArticle(c *gin.Context) {
 		global.GM_LOG.Error(err)
 		return
 	}
+	sys.MarkUpload[r.CoverImageUrl].Ticker.Stop()
+	sys.MarkUpload[r.CoverImageUrl].CloseChan <- true
 	response.OkWithDetailed(map[string]uint{}, "修改成功", c)
 }
 
@@ -112,7 +119,7 @@ func (g blogCurd) UpdateArticle(c *gin.Context) {
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body request.ArticleContentBackUp true "文章内容"
+// @Param data body request.ArticleContent true "文章内容"
 // @Success 200 {object} response.Response{msg=string} "1"
 // @Router /blog/UpdateArticle [post]
 func (g blogCurd) UpdateArticleContent(c *gin.Context) {
@@ -140,7 +147,7 @@ func (g blogCurd) UpdateArticleContent(c *gin.Context) {
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body request.ArticleContentBackUp true "文章内容"
+// @Param data body request.ArticleContent true "文章内容"
 // @Success 200 {object} response.Response{msg=string} "1"
 // @Router /blog/UpdateArticleContentOnLine [post]
 func (g blogCurd) UpdateArticleContentOnLine(c *gin.Context) {
@@ -190,7 +197,26 @@ func (g blogCurd) FindArticle(c *gin.Context) {
 		global.GM_LOG.Error(err)
 		return
 	}
-	response.OkWithDetailed(&value, "查询成功", c)
+	var result respBlog.BlogArticleResponse
+	result.ID = value.ID
+	result.Title = value.Title
+	result.Content = value.Content
+	result.Tag = value.Tag
+	result.Category = value.Category
+	result.Uid = value.Uid
+	result.ArticleContentBackUp = value.ArticleContentBackUp
+	result.Desc = value.Desc
+	result.CoverImageUrl = value.CoverImageUrl
+	result.LikeAndWatchs = value.LikeAndWatchs
+	result.State = value.State
+	result.IsGood = false
+	for _, watch := range result.LikeAndWatchs {
+		if watch.Ip == c.ClientIP() && watch.Like == 1 {
+			result.IsGood = true
+			break
+		}
+	}
+	response.OkWithDetailed(&result, "查询成功", c)
 }
 
 // @Tags Article
@@ -426,10 +452,8 @@ func (g blogCurd) GetBlogInfoByName(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	//n
 	info, err := blogService.GetBlogInfoByName(&r)
 	if err != nil {
-
 		response.FailWithMessage("查询失败", c)
 		return
 	}
@@ -471,7 +495,7 @@ func (g blogCurd) GetBlogInfoById(c *gin.Context) {
 func (g blogCurd) GetBlogCategoryTaglistById(c *gin.Context) {
 	//人的id
 	value, _ := strconv.ParseUint(c.Query("id"), 10, 32)
-	//info, err := blogService.GetBlogCategoryTaglistById(&r)
+	tags, err := blogService.GetBlogCategoryTaglistById(uint(value))
 	if err != nil {
 		global.GM_LOG.Error("查失败", zap.Error(err))
 		response.FailWithMessage("查询失败", c)
@@ -481,4 +505,108 @@ func (g blogCurd) GetBlogCategoryTaglistById(c *gin.Context) {
 
 }
 
-// @Tags A
+// @Tags Article
+// @Summary 点赞文章
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{msg=string} "tag列表"
+// @Router /blog/GetTaglist [get]
+func (g blogCurd) ClickBlogLike(c *gin.Context) {
+	//人的id
+	value, _ := strconv.ParseUint(c.Query("id"), 10, 32)
+	var l blog.LikeAndWatch
+	l.ArticleID = uint(value)
+	l.Ip = c.ClientIP()
+	err := blogService.ClickBlogLike(&l)
+	if err != nil {
+		//global.GM_LOG.Error("点赞失败", zap.Error(err))
+		response.FailWithMessage("点赞失败", c)
+		return
+	}
+	response.OkWithMessage("点赞成功", c)
+}
+
+// @Tags Article
+// @Summary 游览量
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{msg=string} "tag列表"
+// @Router /blog/ClickBlogz [get]
+func (g blogCurd) ClickBlog(c *gin.Context) {
+	//人的id
+	value, _ := strconv.ParseUint(c.Query("id"), 10, 32)
+	var l blog.LikeAndWatch
+	l.ArticleID = uint(value)
+	l.Ip = c.ClientIP()
+	err := blogService.ClickBlog(&l)
+	if err != nil {
+		//global.GM_LOG.Error("点赞失败", zap.Error(err))
+		response.FailWithMessage("游览量增加失败", c)
+		return
+	}
+	response.OkWithMessage("游览量增加点赞成功", c)
+}
+
+// @Tags Article
+// @Summary 取消点赞文章
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{msg=string} "tag列表"
+// @Router /blog/CancelLike [Delete]
+func (g blogCurd) CancelLike(c *gin.Context) {
+	//人的id
+	value, _ := strconv.ParseUint(c.Query("id"), 10, 32)
+	var l blog.LikeAndWatch
+	l.ArticleID = uint(value)
+	l.Ip = c.ClientIP()
+	err := blogService.CanclBlogLike(&l)
+	if err != nil {
+		//global.GM_LOG.Error("点赞失败", zap.Error(err))
+		response.FailWithMessage("取消点赞失败", c)
+		return
+	}
+	response.OkWithMessage("取消点赞成功", c)
+}
+
+// @Tags Article
+// @Summary 获取该该用户的今日访问数量
+// @Param x-token header string true "Insert your access token"
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{msg=string} "tag列表"
+// @Router /blog/GetRateNumber [get]
+func (g blogCurd) GetRateNumber(c *gin.Context) {
+	//从jwt拿id 并且获取今日的访问数量
+	ID := lib.GetUserID(c)
+	count, err := blogService.GetRateNumber(ID)
+	if err != nil {
+		//global.GM_LOG.Error("点赞失败", zap.Error(err))
+		response.FailWithMessage("取消点赞失败", c)
+		return
+	}
+	response.OkWithData(respBlog.BlogArticleToday{count}, c)
+}
+
+// @Tags Article
+// @Summary 好评率
+// @Param x-token header string true "Insert your access token"
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{msg=string} "tag列表"
+// @Router /blog/GetRateLikeNumber [get]
+func (g blogCurd) GetRateLikeNumber(c *gin.Context) {
+	//从jwt拿id 好评率
+	ID := lib.GetUserID(c)
+	count, err := blogService.GetRateLikeNumber(ID)
+	if err != nil {
+		//global.GM_LOG.Error("点赞失败", zap.Error(err))
+		response.FailWithMessage("取消点赞失败", c)
+		return
+	}
+	response.OkWithData(respBlog.BlogArticleTodayNumber{count}, c)
+}

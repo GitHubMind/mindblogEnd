@@ -293,6 +293,7 @@ func (b *BaseApi) SetUserInfo(c *gin.Context) {
 		Email:     user.Email,
 		SideMode:  user.SideMode,
 		Enable:    user.Enable,
+		BlogWant:  user.BlogWant,
 	}); err != nil {
 		global.GM_LOG.Error("设置失败!", zap.Error(err))
 		response.FailWithMessage("设置失败", c)
@@ -312,9 +313,9 @@ func (b *BaseApi) SetUserInfo(c *gin.Context) {
 func (b *BaseApi) SetSelfInfo(c *gin.Context) {
 	var user systemReq.ChangeUserInfo
 	_ = c.ShouldBindJSON(&user)
-	//等一会看一下再做消炎
+
 	user.ID = lib.GetUserID(c)
-	//为什么不设置检验？偷懒？
+
 	if err := userService.SetUserInfo(system.SysUser{
 		GM_MODEL: global.GM_MODEL{
 			ID: user.ID,
@@ -326,6 +327,7 @@ func (b *BaseApi) SetSelfInfo(c *gin.Context) {
 		SideMode:      user.SideMode,
 		Enable:        user.Enable,
 		GitHubAddress: user.GitHubAddress,
+		BlogWant:      user.BlogWant,
 	}); err != nil {
 		global.GM_LOG.Error("设置失败!", zap.Error(err))
 		response.FailWithMessage("设置失败", c)

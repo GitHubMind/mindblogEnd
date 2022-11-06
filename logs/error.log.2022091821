@@ -1,2 +1,0 @@
-2022-09-18 21:01:03	ERROR	gin@v1.7.7/context.go:168	Error 1054: Unknown column 'article_requset_id' in 'field list'; Error 1054: Unknown column 'article_requset_id' in 'field list'; Error 1054: Unknown column 'article_requset_id' in 'field list'; Error 1054: Unknown column 'article_requset_id' in 'field list'
-2022-09-18 21:12:55	ERROR	gin@v1.7.7/context.go:168	WHERE conditions required

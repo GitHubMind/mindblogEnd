@@ -2,8 +2,11 @@ package server
 
 import (
 	"blog/global"
+	"blog/model/blog"
 	"blog/model/system"
+	"context"
 	"errors"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -32,4 +35,29 @@ func (jwtService *JwtService) IsBlacklist(jwt string) bool {
 	err := global.GM_DB.Where("jwt = ?", jwt).First(&system.JwtBlacklist{}).Error
 	isNotFound := errors.Is(err, gorm.ErrRecordNotFound)
 	return !isNotFound
+}
+
+//用于加载
+func LoadAll() {
+	var data []string
+	err := global.GM_DB.Model(&system.JwtBlacklist{}).Select("jwt").Find(&data).Error
+	if err != nil {
+		global.GM_LOG.Error("加载数据库jwt黑名单失败!", zap.Error(err))
+		return
+	}
+	for i := 0; i < len(data); i++ {
+		global.BlackCache.SetDefault(data[i], struct{}{})
+	} // jwt黑名单 加入 BlackCache 中
+
+}
+func LoadLike() {
+	var data []blog.LikeAndWatch
+	_ = global.GM_DB.Model(&blog.LikeAndWatch{}).Find(&data).Error
+	for _, value := range data {
+		if value.Like == 1 {
+			key := string(value.ArticleID) + value.Ip + "like"
+			_, _ = global.GM_REDIS.Set(context.Background(), key, value.Like, 0).Result()
+		}
+	}
+
 }

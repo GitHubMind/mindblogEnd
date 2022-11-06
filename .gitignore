@@ -1,0 +1,5 @@
+uploads/*
+DS_Store
+*.yaml
+
+logs/*

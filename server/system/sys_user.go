@@ -82,7 +82,6 @@ func (receiver UserServer) GetUserInfo(uuid uuid.UUID) (reqUser *system.SysUser,
 	return
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: SetUserAuthority
 //@description: 设置一个用户的权限
 //@param: uuid uuid.UUID, authorityId string

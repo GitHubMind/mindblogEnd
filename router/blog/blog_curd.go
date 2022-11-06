@@ -10,7 +10,8 @@ type BlogRouter struct{}
 
 func (s *BlogRouter) InitRouter(Router *gin.RouterGroup) {
 	//blog 后台使用的
-	blogEndApi := Router.Group("blog").Use(middleware.OperationRecord())
+	blogEndApi := Router.Group("blog").Use(middleware.OperationRecord()).Use(middleware.JWTAuth())
+
 	blogFrontApi := Router.Group("blog")
 	apiRouterWithoutRecord := Router.Group("blog")
 
@@ -40,16 +41,22 @@ func (s *BlogRouter) InitRouter(Router *gin.RouterGroup) {
 		blogEndApi.POST("UpdateArticleContent", api.ApiGroupApp.BlogApi.UpdateArticleContent)             // 修改文章id
 		blogEndApi.POST("UpdateArticleContentOnLine", api.ApiGroupApp.BlogApi.UpdateArticleContentOnLine) // 发布文章
 	}
+	//首页展示
+	{
+		blogEndApi.GET("GetRateNumber", api.ApiGroupApp.BlogApi.GetRateNumber)         // 发布文章
+		blogEndApi.GET("GetRateLikeNumber", api.ApiGroupApp.BlogApi.GetRateLikeNumber) // 发布文章
+	}
 	//前端 不用加密
 	{
 		//为测试
 		blogFrontApi.GET("GetBlogInfoByName", api.ApiGroupApp.BlogApi.GetBlogInfoByName)                   // 通过title来获取用户文章信息
 		blogFrontApi.POST("GetBlogSearchArticleList", api.ApiGroupApp.BlogApi.GetBlogSearchArticleList)    // 获取所有文章
-		blogFrontApi.POST("FindBlogArticle", api.ApiGroupApp.BlogApi.FindArticle)                          // 通过id寻找他api
+		blogFrontApi.POST("FindBlogArticle", api.ApiGroupApp.BlogApi.FindArticle)                          // 通过id寻找文章
 		blogFrontApi.GET("GetBlogInfoById", api.ApiGroupApp.BlogApi.GetBlogInfoById)                       // 通过id来获取信息 包括名字Ï
-		blogFrontApi.GET("GetBlogCategoryTaglistById", api.ApiGroupApp.BlogApi.GetBlogCategoryTaglistById) // 创建Api
-		blogEndApi.GET("GETLike", api.ApiGroupApp.BlogApi.GetSearchArticleList)                            // 通过title来获取所有信息
-
+		blogFrontApi.GET("GetBlogCategoryTaglistById", api.ApiGroupApp.BlogApi.GetBlogCategoryTaglistById) // 通过id 来获取用户的信息(标签和类别）
+		blogFrontApi.GET("GETLike", api.ApiGroupApp.BlogApi.ClickBlogLike)                                 // 通过title来获取所有信息
+		blogFrontApi.DELETE("CancelLike", api.ApiGroupApp.BlogApi.CancelLike)                              // 通过title来获取所有信息
+		blogFrontApi.GET("ClickBlog", api.ApiGroupApp.BlogApi.ClickBlog)                                   //  游览量++
 	}
 
 }

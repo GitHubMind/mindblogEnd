@@ -1,2 +1,0 @@
-2022-09-19 23:18:21	ERROR	gin@v1.7.7/context.go:168	Error 1062: Duplicate entry '7' for key 'blog_article.PRIMARY'
-2022-09-19 23:18:54	ERROR	gin@v1.7.7/context.go:168	WHERE conditions required

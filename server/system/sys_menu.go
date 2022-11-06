@@ -13,7 +13,6 @@ type MenuService struct{}
 
 var MenuServiceApp = new(MenuService)
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: GetMenuTree
 //@description: 获取动态菜单树
 //@param: authorityId string
@@ -85,7 +84,6 @@ func (menuService *MenuService) getMenuTreeMap(authorityId uint) (treeMap map[st
 	return treeMap, err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: AddMenuAuthority
 //@description: 为角色增加menu树
 //@param: menus []model.SysBaseMenu, authorityId string
@@ -98,7 +96,6 @@ func (menuService *MenuService) AddMenuAuthority(menus []system.SysBaseMenu, aut
 	return err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: GetBaseMenuTree
 //@description: 获取基础路由树
 //@return: menus []system.SysBaseMenu, err error
@@ -112,7 +109,6 @@ func (menuService *MenuService) GetBaseMenuTree() (menus []system.SysBaseMenu, e
 	return menus, err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: getBaseMenuTreeMap
 //@description: 获取路由总树mapGetMenuAuthority
 //@return: treeMap map[string][]system.SysBaseMenu, err error
@@ -128,7 +124,6 @@ func (menuService *MenuService) getBaseMenuTreeMap() (treeMap map[string][]syste
 	return treeMap, err
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: getBaseChildrenList
 //@description: 获取菜单的子菜单
 //@param: menu *model.SysBaseMenu, treeMap map[string][]model.SysBaseMenu

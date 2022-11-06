@@ -32,7 +32,6 @@ func (casbinService CasbinService) UpdateCasbin(AuthorityID uint, casbinInfos []
 	return nil
 }
 
-//@author: [piexlmax](https://github.com/piexlmax)
 //@function: ClearCasbin
 //@description: 清除匹配的权限
 //@param: v int, p ...string

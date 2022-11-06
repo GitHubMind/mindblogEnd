@@ -51,4 +51,5 @@ type ChangeUserInfo struct {
 	Enable        int                   `json:"enable" gorm:"comment:冻结用户"`                                                           //冻结用户
 	Authorities   []system.SysAuthority `json:"-" gorm:"many2many:sys_user_authority;"`
 	GitHubAddress string                `json:"github_address"  gorm:"comment:github地址"` // 用户邮箱
+	BlogWant      string                `json:"blog_want"comment:"blog签名"`
 }

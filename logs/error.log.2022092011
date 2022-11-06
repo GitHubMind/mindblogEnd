@@ -1,1 +1,0 @@
-2022-09-20 11:23:08	ERROR	blog/main.go:39	register table failed{error 26 0  invalid field found for struct blog/model/blog.Article's field ArticleContentBackUp: define a valid foreign key for relations or implement the Valuer/Scanner interface}
