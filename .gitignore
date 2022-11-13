@@ -1,5 +1,5 @@
 uploads/*
-*.yaml
+config.yaml
 
 logs/*
 *.exe

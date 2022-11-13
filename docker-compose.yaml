@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  redis:
+    image: redis
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - 6379:6379
+    command: [ "redis-server","/etc/redis/redis.conf" ]
+    #    Docker容器的重启策略如下：
+    #    no，默认策略，在容器退出时不重启容器
+    #    on-failure，在容器非正常退出时（退出状态非0），才会重启容器
+    #    on-failure:3，在容器非正常退出时重启容器，最多重启3次
+    #    always，在容器退出时总是重启容器
+    #    unless-stopped，在容器退出时总是重启容器，但是不考虑在Docker守护进程启动时就已经停止了的容器
+
+    volumes:
+      # <本地配置文件> : <docker中的配置文件> : <ro:docker容器对该文件只读,默认是rw可读可写>
+      - ../redis/redis.conf:/etc/redis/redis.conf:ro
+      # <本地数据目录> : <docker中的数据目录>
+
+      - ../redis/data:/data
+# <本地日志目录> : <docker中的日志目录>
+# redis不具有自动创建/logs的权限，如果redis.conf中指定的相对位置,则数据目录已经可以映射出日志文件
+#- ../redis/logs:/logs
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    volumes:
+#      注意文件夹是否存在
+      - ./mysql/conf.d:/etc/mysql/my.cnf:ro
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/log:/data/mysql/logs
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - TZ=Asia/Shanghai
+    #    platform: linux/x86_64 #针对mac M1芯片
+    ports:
+      - "3306:3306"
