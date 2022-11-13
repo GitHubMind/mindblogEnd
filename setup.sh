@@ -23,11 +23,19 @@ echo -e "${YELOW_COLOR}---step3:更改权限---${RES}"
 chmod -R 777 blog
 echo -e "${BLUE_COLOR}更改权限完成${RES}\n"
 
-echo -e "${YELOW_COLOR}---step4:杀掉进程并且运行---${RES}"
+
 i1=`ps -ef|grep -E "blog"|grep -v grep|awk '{print $2}'`
+if [ $i1 ]
+then
+echo -e "${YELOW_COLOR}---step4:杀掉进程并且运行---${RES}"
 echo -e "${BLUE_COLOR}杀掉进程$i1${RES}\n"
+kill -9 $i1
+fi
 #   9       KILL (non-catchable, non-ignorable kill)
-kill -9 $i1 && nohup ./blog >bloglogs 2>&1 &
+
+
+
+nohup ./blog >bloglogs 2>&1 &
 
 i2=`ps -ef|grep -E "blog"|grep -v grep|awk '{print $2}'`
 
