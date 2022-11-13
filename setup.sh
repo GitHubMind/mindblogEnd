@@ -15,7 +15,7 @@ echo -e "${BLUE_COLOR}合并代码成功${RES}\n"
 
 echo -e "${YELOW_COLOR}---step2:编译---${RES}"
 
-go build -o blog.exe main.go
+go build -o blog main.go
 
 echo -e "${BLUE_COLOR}编译完成${RES}\n"
 
