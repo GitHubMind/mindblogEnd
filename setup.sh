@@ -29,6 +29,6 @@ echo -e "${BLUE_COLOR}杀掉进程$i1${RES}\n"
 #   9       KILL (non-catchable, non-ignorable kill)
 kill -9 $i1 && nohup ./blog >bloglogs 2>&1 &
 
-i2=`ps -ef|grep -E "RunningManageServer"|grep -v grep|awk '{print $2}'`
+i2=`ps -ef|grep -E "blog"|grep -v grep|awk '{print $2}'`
 
 echo -e "${GREEN_COLOR}****部署成功,部署的进程ID为:$i2${RES}****"
