@@ -12,23 +12,23 @@ func (s *BlogRouter) InitRouter(Router *gin.RouterGroup) {
 	//blog 后台使用的
 	blogEndApi := Router.Group("blog").Use(middleware.OperationRecord()).Use(middleware.JWTAuth())
 
-	blogFrontApi := Router.Group("blog")
-	apiRouterWithoutRecord := Router.Group("blog")
+	blogFrontApi := Router.Group("blog").Use(middleware.JWTAuth())
+	//apiRouterWithoutRecord := Router.Group("blog")
 
 	//authorityRouter := Router.Group("authority").Use(middleware.OperationRecord())
 	//apiRouterApi := api.ApiGroupApp.SystemApi.Blog
 
 	//tag
 	{
-		apiRouterWithoutRecord.POST("CreateTag", api.ApiGroupApp.BlogApi.CreateTag)   // 创建Api
-		apiRouterWithoutRecord.GET("GetTaglist", api.ApiGroupApp.BlogApi.GetTag)      // 创建Api
-		apiRouterWithoutRecord.DELETE("DeleteTag", api.ApiGroupApp.BlogApi.DeleteTag) // 创建Api
+		blogEndApi.POST("CreateTag", api.ApiGroupApp.BlogApi.CreateTag)   // 创建Api
+		blogEndApi.GET("GetTaglist", api.ApiGroupApp.BlogApi.GetTag)      // 创建Api
+		blogEndApi.DELETE("DeleteTag", api.ApiGroupApp.BlogApi.DeleteTag) // 创建Api
 	}
 	//Category
 	{
-		apiRouterWithoutRecord.POST("CreateCategory", api.ApiGroupApp.BlogApi.CreateCategory)   // 创建Api
-		apiRouterWithoutRecord.GET("GetCategorylist", api.ApiGroupApp.BlogApi.GetCategory)      // 创建Api
-		apiRouterWithoutRecord.DELETE("DeleteCategory", api.ApiGroupApp.BlogApi.DeleteCategory) // 创建Api
+		blogEndApi.POST("CreateCategory", api.ApiGroupApp.BlogApi.CreateCategory)   // 创建Api
+		blogEndApi.GET("GetCategorylist", api.ApiGroupApp.BlogApi.GetCategory)      // 创建Api
+		blogEndApi.DELETE("DeleteCategory", api.ApiGroupApp.BlogApi.DeleteCategory) // 创建Api
 	}
 	//article
 	{
@@ -41,14 +41,13 @@ func (s *BlogRouter) InitRouter(Router *gin.RouterGroup) {
 		blogEndApi.POST("UpdateArticleContent", api.ApiGroupApp.BlogApi.UpdateArticleContent)             // 修改文章id
 		blogEndApi.POST("UpdateArticleContentOnLine", api.ApiGroupApp.BlogApi.UpdateArticleContentOnLine) // 发布文章
 	}
-	//首页展示
+	//首页展示(后台）
 	{
-		blogEndApi.GET("GetRateNumber", api.ApiGroupApp.BlogApi.GetRateNumber)         // 发布文章
+		blogEndApi.GET("GetRateNumber", api.ApiGroupApp.BlogApi.GetRateNumber)         // 获得好评率
 		blogEndApi.GET("GetRateLikeNumber", api.ApiGroupApp.BlogApi.GetRateLikeNumber) // 发布文章
 	}
 	//前端 不用加密
 	{
-		//为测试
 		blogFrontApi.GET("GetBlogInfoByName", api.ApiGroupApp.BlogApi.GetBlogInfoByName)                   // 通过title来获取用户文章信息
 		blogFrontApi.POST("GetBlogSearchArticleList", api.ApiGroupApp.BlogApi.GetBlogSearchArticleList)    // 获取所有文章
 		blogFrontApi.POST("FindBlogArticle", api.ApiGroupApp.BlogApi.FindArticle)                          // 通过id寻找文章

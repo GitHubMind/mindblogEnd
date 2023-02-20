@@ -2,4 +2,18 @@ uploads/*
 DS_Store
 *.yaml
 
-logs/*
+logs
+
+
+*.exe
+
+exe
+
+error.log
+
+info.log
+
+info.*
+
+*.log
+

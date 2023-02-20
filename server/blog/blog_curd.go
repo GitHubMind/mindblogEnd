@@ -117,21 +117,17 @@ func (receiver BlogService) GetSearchArticleList(art *request.ArticleSearchRequs
 	var article blog.Article
 	limit := art.PageSize
 	offset := art.PageSize * (art.Page - 1)
-	//var a blog.Article
-	//array.ID = 1
 	db := global.GM_DB.Model(&article)
 
 	if art.Title != "" {
 		db = db.Where("title LIKE ?", art.Title+"%")
 	}
 	//
-	if art.State == 0 || art.State == 1 {
+	if art.State == 2 || art.State == 1 {
 		db = db.Where("state = ?", art.State)
 	}
 
 	if len(art.ArticleTags) != 0 {
-		//db := global.GM_DB.Debug().Model(&article).Model(&array).Preload("Category").Preload("Tag")
-		//db.Where("articletags in (?)", art.ArticleTags)
 		var array []blog.Tag
 		for _, value := range art.ArticleTags {
 			var a blog.Tag
@@ -157,7 +153,6 @@ func (receiver BlogService) GetSearchArticleList(art *request.ArticleSearchRequs
 			db = db.Where(" id in (?) ", artId)
 		}
 	}
-
 	db = db.Where("uid = ? ", art.ID).Order("created_at desc")
 	db.Count(&total)
 	if err != nil {

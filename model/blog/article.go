@@ -12,7 +12,7 @@ type Article struct {
 	Content              template.HTML `json:"content"gorm:"type:longtext"`
 	CoverImageUrl        string        `json:"cover_image_url"`
 	Uid                  uint          `json:"u_id"`
-	State                uint8         `json:"state"gorm:"comment:发布状态"`
+	State                uint8         `json:"status"gorm:"comment:发布状态,1发布，2未发布;default 2"`
 	Tag                  []Tag         `json:"tag"gorm:"many2many:blog_article_tag;comment:标签"`
 	Category             []Category    `json:"category"gorm:"many2many:blog_article_category;"`
 	LikeAndWatchs        []LikeAndWatch

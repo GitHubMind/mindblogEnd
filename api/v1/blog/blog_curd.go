@@ -67,7 +67,9 @@ func (g blogCurd) DeleteArticle(c *gin.Context) {
 		return
 	}
 	response.OkWithDetailed(map[string]uint{"id": id}, "删除成功", c)
-} // @Tags Article
+}
+
+// @Tags Article
 // @Summary 删除文章
 // @Security ApiKeyAuth
 // @accept application/json
@@ -109,8 +111,10 @@ func (g blogCurd) UpdateArticle(c *gin.Context) {
 		global.GM_LOG.Error(err)
 		return
 	}
-	sys.MarkUpload[r.CoverImageUrl].Ticker.Stop()
-	sys.MarkUpload[r.CoverImageUrl].CloseChan <- true
+	if _, ok := sys.MarkUpload[r.CoverImageUrl]; ok {
+		sys.MarkUpload[r.CoverImageUrl].Ticker.Stop()
+		sys.MarkUpload[r.CoverImageUrl].CloseChan <- true
+	}
 	response.OkWithDetailed(map[string]uint{}, "修改成功", c)
 }
 
@@ -239,7 +243,7 @@ func (g blogCurd) GetSearchArticleList(c *gin.Context) {
 	r.ID = lib.GetUserID(c)
 	value, total, err := blogService.GetSearchArticleList(&r)
 	if err != nil {
-		response.FailWithMessage("查询失败,不能重复添加", c)
+		response.FailWithMessage("查询失败", c)
 		global.GM_LOG.Error("GetSearchArticleList查询失败", err)
 		return
 	}
@@ -270,7 +274,7 @@ func (g blogCurd) GetBlogSearchArticleList(c *gin.Context) {
 	}
 	value, total, err := blogService.GetSearchArticleList(&r)
 	if err != nil {
-		response.FailWithMessage("查询失败,不能重复添加", c)
+		response.FailWithMessage("查询失败", c)
 		global.GM_LOG.Error("GetSearchArticleList查询失败", err)
 		return
 	}
@@ -564,7 +568,6 @@ func (g blogCurd) CancelLike(c *gin.Context) {
 	l.Ip = c.ClientIP()
 	err := blogService.CanclBlogLike(&l)
 	if err != nil {
-		//global.GM_LOG.Error("点赞失败", zap.Error(err))
 		response.FailWithMessage("取消点赞失败", c)
 		return
 	}
