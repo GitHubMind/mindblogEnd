@@ -33,10 +33,8 @@ kill -9 $i1
 fi
 #   9       KILL (non-catchable, non-ignorable kill)
 
-
-
 nohup ./blog >bloglogs 2>&1 &
 
 i2=`ps -ef|grep -E "blog"|grep -v grep|awk '{print $2}'`
 
-echo -e "${GREEN_COLOR}****部署成功,部署的进程ID为:$i2${RES}****"
+echo -e "${GREEN_COLOR}****部署成功,部署的进程ID为:$i2 ${RES}  ****"

@@ -2,6 +2,8 @@ uploads/*
 DS_Store
 *.yaml
 
+config/config.yaml
+
 logs/*
 *.exe
 .DS_Store

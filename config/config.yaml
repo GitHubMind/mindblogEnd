@@ -18,12 +18,12 @@ local:
     path: uploads/file
     store-path: uploads/file
 mysql:
-    path: 47.97.99.8
-    port: "3307"
+    path: 127.0.0.1
+    port: 3306
     config: charset=utf8mb4&parseTime=True&loc=Local
     db-name: blog
-    username: blog
-    password: KB8GXp4jTK7LWtLA
+    username: root
+    password: mind123
     name: ""
     dsn: ""
     max-idle-conns: 10

@@ -12,7 +12,7 @@ func (s *BlogRouter) InitRouter(Router *gin.RouterGroup) {
 	//blog 后台使用的
 	blogEndApi := Router.Group("blog").Use(middleware.OperationRecord()).Use(middleware.JWTAuth())
 
-	blogFrontApi := Router.Group("blog").Use(middleware.JWTAuth())
+	blogFrontApi := Router.Group("blog")
 	//apiRouterWithoutRecord := Router.Group("blog")
 
 	//authorityRouter := Router.Group("authority").Use(middleware.OperationRecord())
